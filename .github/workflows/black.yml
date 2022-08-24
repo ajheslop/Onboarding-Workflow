@@ -1,5 +1,5 @@
 name: black
-on: workflow_run
+on: push
 jobs:
   black:
     runs-on: ubuntu-20.04
