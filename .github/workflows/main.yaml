@@ -1,17 +1,23 @@
-name: Super-Linter
+name: flake8 Lint
 
-on: push
+on: [push, pull_request]
 
 jobs:
-  super-lint:
-    name: Lint code base
+  flake8-lint:
     runs-on: ubuntu-latest
+    name: Lint
     steps:
-      - name: Checkout code
+      - name: Check out source repository
         uses: actions/checkout@v2
-
-      - name: Run Super-Linter
-        uses: github/super-linter@v3.17.0
-        env:
-          DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: flake8 Lint
+        uses: py-actions/flake8@v2
+        with:
+          ignore: "F401"
+          exclude: "src/ignoreme.py"
+          max-line-length: "100"
+          path: "src"
+          plugins: "flake8-bugbear==22.1.11 flake8-black"
