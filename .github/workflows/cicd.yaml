@@ -45,16 +45,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           
-      - name: Run linting checks
-        run: |
-          flake8 .
-          # finds files in current folder and passes to pylint (pylint usually needs __init__.py)
-          # ignores:
-          # unused context (as this is required for aws)
-          # generic exception (as handling is intentionally limited to generic return)
-          # too many args (required for mocks)
-          find . -iname "*.py" -maxdepth 1 | xargs pylint --fail-under=8 --disable="R0913, W0613, W0703"
- 
+  flake8-lint:
+    runs-on: ubuntu-latest
+    name: Lint
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v2
+      - name: Set up Python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: flake8 Lint
+        uses: py-actions/flake8@v2
+        
 # run code quality checks in parallel
   Unit-Testing:
     needs: [Test-Python-Script]
